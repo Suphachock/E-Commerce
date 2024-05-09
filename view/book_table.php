@@ -22,8 +22,8 @@
                 <td>฿<?= $row['pd_price'] ?></td>
                 <td><?= $row['pd_qty'] ?></td>
                 <td>
-                    <button class="btn btn-warning" onclick="show_md_book_edit('<?= $row['pd_id'] ?>')">แก้ไข</button>
-                    <button class="btn btn-danger " onclick="return confirm('Do you want to delete book!!',delete_book('<?= $row['pd_id'] ?>'))">ลบ</button>
+                    <button class="btn btn-warning" onclick="show_md_book_edit('<?= $row['pd_id'] ?>')"><i class="fa-regular fa-pen-to-square fa-2xs"></i> แก้ไข</button>
+                    <button class="btn btn-danger " onclick="return confirm('Do you want to delete book!!',delete_book('<?= $row['pd_id'] ?>'))"><i class="fa-solid fa-trash fa-2xs"></i> ลบ</button>
                 </td>
             </tr>
         <?php } ?>

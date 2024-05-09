@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="/E-Commerce">Book-Shop</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,9 +6,26 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" href="/E-Commerce/view/login.php">Login&Register</a>
-        </li>
+        <?php
+        if (isset($_SESSION['username'])) { ?>
+          <li class="nav-item">
+            <a class="nav-link active"><i class="fa-solid fa-user"></i> สวัสดีคุณ <?= htmlspecialchars($_SESSION['fullname']) ?></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/E-Commerce/view/checkout.php" id="cart_number">
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#"><i class="fa-solid fa-truck-fast"></i> ติดตามคำสั่งซื้อ</a> <!-- Replace the link with the correct path -->
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a> 
+          </li>
+        <?php } else { ?>
+          <li class="nav-item">
+            <a class="nav-link active" href="/E-Commerce/view/login.php"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+          </li>
+        <?php } ?>
       </ul>
     </div>
   </div>

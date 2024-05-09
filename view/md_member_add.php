@@ -91,7 +91,7 @@
                             }
                         });
                     } else {
-                        alert("Failed to add member!")
+                        alert(res)
                     }
                 }
             });

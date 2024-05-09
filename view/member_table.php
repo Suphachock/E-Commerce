@@ -28,13 +28,18 @@
                 <tr>
                     <!-- Display the counter as the row number -->
                     <td><?= $counter ?></td>
-                    <td><?= $row['username'] ?></td>
+                    <td>
+                        <?php if (!empty($row['isAdmin'])) : ?>
+                            <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
+                        <?php endif; ?>
+                        <?= $row['username'] ?>
+                    </td>
                     <td><?= $row['fullname'] ?></td>
                     <td><?= $row['email'] ?></td>
                     <td><?= $row['tel'] ?></td>
                     <td>
-                        <button class="btn btn-warning" onclick="editMember(<?= $row['id'] ?>)">แก้ไข</button>
-                        <button class="btn btn-danger" onclick="return confirm('Do you want to delete member?',deleteMember(<?= $row['id'] ?>))">ลบ</button>
+                        <button class="btn btn-warning" onclick="editMember(<?= $row['id'] ?>)"><i class="fa-regular fa-pen-to-square fa-2xs"></i> แก้ไข</button>
+                        <button class="btn btn-danger" onclick="return confirm('Do you want to delete member?',deleteMember(<?= $row['id'] ?>))"><i class="fa-solid fa-trash fa-2xs"></i> ลบ</button>
                     </td>
                 </tr>
         <?php

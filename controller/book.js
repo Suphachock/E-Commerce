@@ -1,7 +1,7 @@
 function show_md_book_edit(id) {
   $.ajax({
     type: "POST",
-    url: "view/md_book_edit.php",
+    url: "/E-Commerce/view/md_book_edit.php",
     data: {
       id: id,
     },
@@ -16,7 +16,7 @@ function show_md_book_edit(id) {
 function show_md_book_add() {
   $.ajax({
     type: "POST",
-    url: "view/md_book_add.php",
+    url: "/E-Commerce/view/md_book_add.php",
     dataType: "html",
     success: function (res) {
       $(".md_book_add").html(res);
@@ -28,7 +28,7 @@ function show_md_book_add() {
 function delete_book(id) {
   $.ajax({
     type: "POST",
-    url: "model/delete_book.php",
+    url: "/E-Commerce/model/delete_book.php",
     data: {
       id: id,
     },
@@ -36,7 +36,7 @@ function delete_book(id) {
       alert("Delete book success!!!");
       $.ajax({
         type: "POST",
-        url: "view/book_table.php",
+        url: "/E-Commerce/view/book_table.php",
         dataType: "html",
         success: function (res) {
           $(".book-table").html(res);
