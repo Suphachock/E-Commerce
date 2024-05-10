@@ -1,4 +1,4 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
   // สมัครสมาชิก
   $("#register").on("submit", function (event) {
     event.preventDefault();
@@ -26,7 +26,6 @@ $(document).ready(function () {
     event.preventDefault();
     // Create a FormData object from the form
     const formData = new FormData(this);
-
     // Send an AJAX request to the server
     $.ajax({
       url: "../model/login_check.php", // The URL of your PHP script
@@ -54,4 +53,3 @@ function logout() {
     },
   });
 }
-

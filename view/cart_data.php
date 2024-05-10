@@ -6,10 +6,10 @@ session_start();
 include_once "../condb.php";
 
 // Get the user information based on the username in the session
-if (isset($_SESSION['username'])) {
-    $sql = "SELECT * FROM member WHERE username = ?";
+if (isset($_SESSION['userid'])) {
+    $sql = "SELECT fullname,tel,address,email FROM member WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $_SESSION['username']);
+    $stmt->bind_param("i", $_SESSION['userid']);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -82,10 +82,11 @@ if (!empty($product_ids)) {
                             <img src="../img/<?= $row_cart['pd_image'] ?>" alt="<?= $row_cart['pd_name'] ?>" width="60" class="mr-3 rounded" style="object-fit: cover; border-radius: 8px;">
 
                             <!-- Main content -->
-                            <div class="d-flex justify-content-between flex-grow-1 mx-1">
-                                <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-between flex-grow-1 mx-2">
+                                <div class="d-flex flex-column ">
                                     <h6 class="my-0 font-weight-bold"><?= $row_cart['pd_name'] ?></h6>
-                                    <span class="text font-weight-bold">฿<?= number_format($row_cart['pd_price'], 2) ?></span>
+                                    <!-- Add margin-top to span to add space between h6 and span -->
+                                    <span class="text font-weight-bold" style="margin-top: 10px;">฿<?= number_format($row_cart['pd_price'], 2) ?></span>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <input type="number" class="form-control mx-1" min="1" max="100" value="<?= $cart_qty ?>" style="width: 60px;" onchange="updateCartQty('<?= $row_cart['pd_id'] ?>', this.value)">
@@ -157,7 +158,7 @@ if (!empty($product_ids)) {
         </div>
     </main>
 <?php else : ?>
-    <div class="d-flex justify-content-center align-items-center">
+    <div class="mt-5">
         <h1>ไม่มีสินค้าในตะกร้า...</h1>
     </div>
 <?php endif; ?>

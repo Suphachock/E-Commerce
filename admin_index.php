@@ -3,7 +3,7 @@
 session_start();
 
 // Check if the user is logged in by verifying if a session variable (e.g., 'username') is set
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['userid'])) {
     header("Location: /E-Commerce/view/login.php");
     exit();
 }
@@ -43,19 +43,19 @@ include_once "navbar_admin.php";
     <script src="controller/book.js"></script>
     <script src="controller/login.js"></script>
     <script>
-        $(document).ready(function() {
+        document.addEventListener("DOMContentLoaded", function() {
             display_book_table();
         });
 
         function display_book_table() {
-            $.ajax({
-                type: "POST",
-                url: "view/book_table.php",
-                dataType: "html",
-                success: function(res) {
-                    $(".book-table").html(res);
-                }
-            });
+            fetch("view/book_table.php", {
+                    method: "POST",
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector(".book-table").innerHTML = html;
+                })
+                .catch(error => console.error("Fetch error:", error));
         }
     </script>
 </body>

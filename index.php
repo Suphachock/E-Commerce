@@ -31,39 +31,49 @@ include_once "navbar.php";
 </head>
 
 <body class="bg-light">
-    <div class="container">
-        <h1 class="text-center mt-2">ร้านขายหนังสือออนไลน์</h1>
+    <div class="container ">
+        <h1 class="text-center">ร้านขายหนังสือออนไลน์</h1>
         <?php
         // Fetch data from the product table
         $sql = "SELECT * FROM product ORDER BY pd_id";
         $result = mysqli_query($conn, $sql);
         ?>
-        <div class="row d-flex justify-content-center">
+        <div class="row">
             <?php while ($row = mysqli_fetch_array($result)) { ?>
-                <div class="col-md-3 col-sm-3 mb-4  p-3">
+                <div class="col-md-3 col-sm-6 mb-4">
                     <div class="card">
-                        <img src="img/<?= htmlspecialchars($row['pd_image']) ?>" class="card-img-top" alt="<?= htmlspecialchars($row['pd_name']) ?>">
+                        <!-- Card Image -->
+                        <img src="img/<?= htmlspecialchars($row['pd_image']) ?>" alt="<?= htmlspecialchars($row['pd_name']) ?> " height="400px">
+                        <!-- Card Body -->
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($row['pd_name']) ?></h5>
                             <p class="card-text text-truncate"><?= htmlspecialchars($row['pd_detail']) ?></p>
-                            <div class="text-end">
-                                <p class="card-text fw-bold text-success">ราคา ฿<?= htmlspecialchars($row['pd_price']) ?></p>
-                                <?php if (isset($_SESSION['username'])) { ?>
-                                    <a href="#" class="btn btn-outline-primary w-100" onclick="addCart('<?= $row['pd_id'] ?>')"><i class="fa-solid fa-cart-shopping"></i> เพิ่มลงตะกร้า</a>
+                            <!-- Price and Add to Cart Button -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="card-text fw-bold text-success">ราคา ฿<?= htmlspecialchars($row['pd_price']) ?></p>
+                                </div>
+                                <?php if (isset($_SESSION['userid'])) { ?>
+                                    <a href="#" class="btn btn-outline-primary" onclick="addCart('<?= $row['pd_id'] ?>')">
+                                        <i class="fa-solid fa-cart-shopping"></i> เพิ่มลงตะกร้า
+                                    </a>
                                 <?php } ?>
                             </div>
                         </div>
                     </div>
+
                 </div>
             <?php } ?>
         </div>
+
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="controller/login.js"></script>
     <script src="controller/cart.js"></script>
-   
+
+
 </body>
 
 </html>

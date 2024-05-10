@@ -13,6 +13,10 @@ function show_md_book_edit(id) {
   });
 }
 
+
+
+
+
 function show_md_book_add() {
   $.ajax({
     type: "POST",

@@ -2,26 +2,43 @@
 // Start the session
 session_start();
 
-// Check if the user is logged in and their admin status
-if (isset($_SESSION['username'])) {
-    // Check if user is an admin
-    if (isset($_SESSION['admin']) && $_SESSION['admin'] == 1) {
-        // Redirect to admin index page
-        header("Location: /E-Commerce/admin_index.php");
-        exit();
-    }
-    // Check if user is not an admin
-    elseif (isset($_SESSION['admin']) && $_SESSION['admin'] == 0) {
-        // Redirect to the home page
-        header("Location: /E-Commerce/");
-        exit();
-    }
-}
-
-// Includes database connection and navbar
+// Include database connection file
 include_once "../condb.php";
-include_once "../navbar.php";
 
+// Check if the user is logged in and their admin status
+if (isset($_SESSION['userid'])) {
+    // Prepare and execute SQL query
+    $sql = "SELECT fullname,tel,address,isAdmin FROM member WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $_SESSION['userid']);
+    $stmt->execute();
+    // Check for query execution errors
+    if ($stmt->error) {
+        die("Query execution failed: " . $stmt->error);
+    }
+    // Get query result
+    $result = $stmt->get_result();
+    // Check if user exists
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $_SESSION['fullname'] = $user['fullname'];
+        if ($user['isAdmin'] == 1) {
+            // Redirect to admin index page
+            header("Location: /E-Commerce/admin_index.php");
+            exit();
+        } elseif ($user['isAdmin'] == 0) {
+            // Redirect to the home page
+            header("Location: /E-Commerce/");
+            exit();
+        }
+    } else {
+        die("User not found.");
+    }
+
+    // Close statement
+    $stmt->close();
+}
+include_once "../navbar.php";
 
 ?>
 
@@ -39,7 +56,7 @@ include_once "../navbar.php";
 
 <body class="bg-light">
     <div class="container mt-5 h-75 d-flex justify-content-center align-items-center">
-    
+
         <div class="card " style="width: 400px;">
             <ul class="nav nav-tabs card-header" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">

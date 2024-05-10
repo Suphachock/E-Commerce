@@ -7,7 +7,7 @@ $username = trim($_POST['username']);
 $password = trim($_POST['password']);
 
 // Prepare the SQL query to retrieve data from the member table
-$sql = "SELECT password, isAdmin,fullname FROM member WHERE username = ?";
+$sql = "SELECT id,password,isAdmin FROM member WHERE username = ?";
 
 if ($stmt = $conn->prepare($sql)) {
     // Bind parameters (username)
@@ -21,17 +21,14 @@ if ($stmt = $conn->prepare($sql)) {
         // Check if there is a user with the provided username
         if ($stmt->num_rows > 0) {
             // Bind the result to variables
-            $stmt->bind_result($dbPassword, $isAdmin,$fullname);
+            $stmt->bind_result($id, $dbPassword, $isAdmin);
             $stmt->fetch();
 
             // Verify the password
             if (password_verify($password, $dbPassword)) {
                 // Create session variables
-                $_SESSION['username'] = $username;  // Store username in session
-                $_SESSION['admin'] = $isAdmin;  // Store admin status in session
-                $_SESSION['fullname'] = $fullname;  // Store admin status in session
-
-               echo $isAdmin;
+                $_SESSION['userid'] = $id;  // Store username in session
+                echo $isAdmin;
             } else {
                 // Password does not match
                 echo "Incorrect password.";

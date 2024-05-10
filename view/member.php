@@ -3,7 +3,7 @@
 session_start();
 
 // Check if the user is logged in by verifying if a session variable (e.g., 'username') is set
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['userid'])) {
     header("Location: /E-Commerce/view/login.php");
     exit();
 }
@@ -38,7 +38,7 @@ include_once "../navbar_admin.php";
     <script src="../controller/login.js"></script>
 
     <script>
-        $(document).ready(function() {
+        document.addEventListener("DOMContentLoaded", function () {
             display_member();
         });
         function display_member() {

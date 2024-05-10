@@ -3,7 +3,7 @@
 session_start();
 
 // Check if the user is logged in by verifying if a session variable (e.g., 'username') is set
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['userid'])) {
     header("Location: /E-Commerce/");
     exit();
 }
@@ -27,7 +27,7 @@ include_once "../navbar.php";
 </head>
 
 <body class="bg-light">
-    <div class="container h-75 d-flex justify-content-center align-items-center">
+    <div class="container h-75 d-flex justify-content-center">
         <div class="showcart_data"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -36,19 +36,19 @@ include_once "../navbar.php";
     <script src="../controller/cart.js"></script>
     <script src="../controller/login.js"></script>
     <script>
-        $(document).ready(function() {
+        document.addEventListener("DOMContentLoaded", function() {
             display_cart_data();
         });
 
         function display_cart_data() {
-            $.ajax({
-                type: "POST",
-                url: "cart_data.php",
-                dataType: "html",
-                success: function(res) {
-                    $(".showcart_data").html(res);
-                }
-            });
+            fetch("cart_data.php", {
+                    method: "POST",
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector(".showcart_data").innerHTML = html
+                })
+                .catch(err => console.log("Error :", err))
         }
     </script>
 </body>
