@@ -28,7 +28,9 @@ include_once "../navbar.php";
 
 <body class="bg-light">
     <div class="container h-75 d-flex justify-content-center">
-        <div class="showcart_data"></div>
+        <form id="checkout">
+            <div class="showcart_data"></div>
+        </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -38,6 +40,29 @@ include_once "../navbar.php";
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             display_cart_data();
+            $("#checkout").on("submit", function(event) {
+                event.preventDefault();
+                let formData = new FormData(this);
+                // Display the key/value pairs
+                // for (var pair of formData.entries()) {
+                //     console.log(pair[0] + ", " + pair[1]);
+                // }
+                $.ajax({
+                    url: '../model/add_order.php', // The URL of your PHP script
+                    type: 'POST', // The HTTP method to use (POST)
+                    data: formData, // The form data
+                    processData: false, // Prevent jQuery from processing the data
+                    contentType: false, // Prevent jQuery from setting a default content type
+                    success: function(res) {
+                        if (res === "Order placed successfully.") {
+                            alert(res)
+                            window.location.replace("/E-Commerce/view/order.php");
+                        } else {
+                            alert(res)
+                        }
+                    }
+                });
+            });
         });
 
         function display_cart_data() {

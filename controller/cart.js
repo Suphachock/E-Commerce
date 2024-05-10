@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   cart_number();
+
 });
 
 function addCart(id) {

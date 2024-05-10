@@ -28,14 +28,14 @@ if ($stmt = $conn->prepare($sql)) {
             if (password_verify($password, $dbPassword)) {
                 // Create session variables
                 $_SESSION['userid'] = $id;  // Store username in session
-                echo $isAdmin;
+                echo "Login success.";
             } else {
                 // Password does not match
-                echo "Incorrect password.";
+                echo "Username or password incorrect.";
             }
         } else {
             // No user found with the provided username
-            echo "Username not found.";
+            echo "Username or password incorrect.";
         }
     } else {
         // Failed to execute query

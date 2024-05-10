@@ -16,7 +16,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#"><i class="fa-solid fa-truck-fast"></i> ติดตามคำสั่งซื้อ</a> <!-- Replace the link with the correct path -->
+            <a class="nav-link active" href="/E-Commerce/view/order.php"><i class="fa-solid fa-truck-fast"></i> ติดตามคำสั่งซื้อ</a> <!-- Replace the link with the correct path -->
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ</a> 

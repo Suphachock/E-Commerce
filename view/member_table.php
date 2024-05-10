@@ -1,6 +1,6 @@
 <?php include_once "../condb.php" ?>
 
-<table class="table text-center">
+<table class="table table-striped table-hover text-center">
     <thead class="table-dark">
         <tr>
             <th scope="col">ลำดับ</th>

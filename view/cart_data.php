@@ -50,15 +50,19 @@ if (!empty($product_ids)) {
                 $total_price = 0;
 
                 // Iterate through each product in the cart
-                foreach ($_SESSION['cart'] as $pd_id => $quantity) {
-                    $total_qty += $quantity;
+                if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+                    foreach ($_SESSION['cart'] as $pd_id => $quantity) {
+                        $total_qty += $quantity;
 
-                    // Find the product information from $result_cart
-                    foreach ($result_cart as $row_cart) {
-                        if ($row_cart['pd_id'] == $pd_id) {
-                            $cart_qty = $_SESSION['cart'][$pd_id];
-                            $total_price += $row_cart['pd_price'] * $cart_qty;
-                            break;
+                        // Iterate through $result_cart to find the product
+                        if ($result_cart !== null) {
+                            while ($row_cart = $result_cart->fetch_assoc()) {
+                                if ($row_cart['pd_id'] == $pd_id) {
+                                    $cart_qty = $_SESSION['cart'][$pd_id];
+                                    $total_price += $row_cart['pd_price'] * $cart_qty;
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
@@ -69,91 +73,99 @@ if (!empty($product_ids)) {
                 </h4>
                 <ul class="list-group mb-3">
                     <?php
-                    // Reset the result_cart data pointer
-                    $result_cart->data_seek(0);
+                    // Reset result_cart data pointer
+                    if ($result_cart !== null) {
+                        $result_cart->data_seek(0);
 
-                    // Iterate through each product in the cart and display it
-                    while ($row_cart = $result_cart->fetch_assoc()) {
-                        $cart_qty = $_SESSION['cart'][$row_cart['pd_id']];
+                        // Iterate through each product in the cart and display it
+                        while ($row_cart = $result_cart->fetch_assoc()) {
+                            $cart_qty = isset($_SESSION['cart'][$row_cart['pd_id']]) ? $_SESSION['cart'][$row_cart['pd_id']] : 0;
                     ?>
-                        <li class="list-group-item d-flex align-items-center">
+                            <li class="list-group-item d-flex align-items-center">
+                                <!-- Image -->
+                                <img src="../img/<?= htmlspecialchars($row_cart['pd_image']) ?>" alt="<?= htmlspecialchars($row_cart['pd_name']) ?>" width="60" class="mr-3 rounded" style="object-fit: cover; border-radius: 8px;">
 
-                            <!-- Image -->
-                            <img src="../img/<?= $row_cart['pd_image'] ?>" alt="<?= $row_cart['pd_name'] ?>" width="60" class="mr-3 rounded" style="object-fit: cover; border-radius: 8px;">
-
-                            <!-- Main content -->
-                            <div class="d-flex justify-content-between flex-grow-1 mx-2">
-                                <div class="d-flex flex-column ">
-                                    <h6 class="my-0 font-weight-bold"><?= $row_cart['pd_name'] ?></h6>
-                                    <!-- Add margin-top to span to add space between h6 and span -->
-                                    <span class="text font-weight-bold" style="margin-top: 10px;">฿<?= number_format($row_cart['pd_price'], 2) ?></span>
+                                <!-- Main content -->
+                                <div class="d-flex justify-content-between flex-grow-1 mx-2">
+                                    <div class="d-flex flex-column">
+                                        <h6 class="my-0 font-weight-bold"><?= htmlspecialchars($row_cart['pd_name']) ?></h6>
+                                        <!-- Add margin-top to span to add space between h6 and span -->
+                                        <span class="text font-weight-bold" style="margin-top: 10px;">฿<?= number_format($row_cart['pd_price'], 2) ?></span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <input type="number" name="qty" class="form-control mx-1" min="1" max="100" value="<?= $cart_qty ?>" style="width: 60px;" onchange="updateCartQty('<?= $row_cart['pd_id'] ?>', this.value)">
+                                        <a class="btn btn-danger mx-1" onclick="deleteCart('<?= $row_cart['pd_id'] ?>')">
+                                            <i class="fa-solid fa-trash fa-2xs"></i> ลบ
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <input type="number" class="form-control mx-1" min="1" max="100" value="<?= $cart_qty ?>" style="width: 60px;" onchange="updateCartQty('<?= $row_cart['pd_id'] ?>', this.value)">
-                                    <button class="btn btn-danger" onclick="deleteCart('<?= $row_cart['pd_id'] ?>')">
-                                        <i class="fa-solid fa-trash fa-2xs"></i> ลบ
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    <?php } ?>
+                            </li>
+                            <input type="hidden" name="pd_id[]" value="<?= $row_cart['pd_id'] ?>">
+                            <input type="hidden" name="pd_name[]" value="<?= htmlspecialchars($row_cart['pd_name']) ?>">
+                            <input type="hidden" name="pd_price[]" value=" <?= number_format($row_cart['pd_price'], 2) ?>">
+                    <?php
+                        }
+                    }
+                    ?>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>ราคารวม (บาท)</span>
-                        <strong>฿<?= $total_price ?></strong>
+                        <strong>฿<?= number_format($total_price, 2) ?></strong>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-lg-8">
                 <h4 class="mb-3">รายละเอียดคำสั่งซื้อ</h4>
-
-                <form novalidate>
-                    <div class="row g-3">
-                        <div class="col-sm-12">
-                            <label for="fullName" class="form-label">ชื่อ-นามสกุล</label>
-                            <input type="text" class="form-control" id="fullName" placeholder="" value="<?= htmlspecialchars($user['fullname']) ?>" required>
-                            <div class="invalid-feedback">
-                                Valid name is required.
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <label for="email" class="form-label">อีเมล</label>
-                            <input type="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" readonly>
-                        </div>
-
-                        <div class="col-12">
-                            <label for="phone" class="form-label">เบอร์โทรศัพท์</label>
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($user['tel']) ?>" readonly>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="address" class="form-label">ที่อยู่</label>
-                            <textarea class="form-control" readonly><?= htmlspecialchars($user['address']) ?></textarea>
-                        </div>
-
-                        <div class="col-6">
-                            <h4 class="mb-3 mx-3">ช่องทางชำระเงิน</h4>
-
-                            <div class="my-3 d-flex">
-                                <div class="form-check mx-2">
-                                    <input name="paymentMethod" type="radio" class="form-check-input" checked>
-                                    <label class="form-check-label" for="credit">เก็บเงินปลายทาง</label>
-                                </div>
-                                <div class="form-check mx-2">
-                                    <input type="radio" class="form-check-input" disabled>
-                                    <label class="form-check-label" for="debit">บัตรเครดิต</label>
-                                </div>
-                                <div class="form-check mx-2">
-                                    <input type="radio" class="form-check-input" disabled>
-                                    <label class="form-check-label" for="paypal">แอพธนาคาร</label>
-                                </div>
-                            </div>
+                <div class="row g-3">
+                    <div class="col-sm-12">
+                        <label for="fullName" class="form-label">ชื่อ-นามสกุล</label>
+                        <input type="text" name="fullname" class="form-control" value="<?= htmlspecialchars($user['fullname']) ?>" required>
+                        <div class="invalid-feedback">
+                            Valid name is required.
                         </div>
                     </div>
 
-                    <hr class="my-4">
-                    <button class="w-100 btn btn-primary btn-lg" type="submit">ยืนยันคำสั่งซื้อ</button>
-                </form>
+                    <div class="col-12">
+                        <label for="email" class="form-label">อีเมล</label>
+                        <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" readonly>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="phone" class="form-label">เบอร์โทรศัพท์</label>
+                        <input type="text" name="tel" class="form-control" value="<?= htmlspecialchars($user['tel']) ?>" readonly>
+                    </div>
+
+                    <div class="col-6">
+                        <label for="address" class="form-label">ที่อยู่</label>
+                        <textarea name="address" class="form-control"><?= htmlspecialchars($user['address']) ?></textarea>
+                    </div>
+
+                    <div class="col-6">
+                        <h4 class="mb-3 mx-3">ช่องทางชำระเงิน</h4>
+
+                        <div class="my-3 d-flex">
+                            <div class="form-check mx-2">
+                                <input name="payment" value="เก็บเงินปลายทาง" type="radio" class="form-check-input" checked>
+                                <label class="form-check-label">เก็บเงินปลายทาง</label>
+                            </div>
+                            <div class="form-check mx-2">
+                                <input name="payment" type="radio" class="form-check-input" disabled>
+                                <label class="form-check-label">บัตรเครดิต</label>
+                            </div>
+                            <div class="form-check mx-2">
+                                <input name="payment" type="radio" class="form-check-input" disabled>
+                                <label class="form-check-label">แอพธนาคาร</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">ยืนยันคำสั่งซื้อ</button>
+
+                <!-- เก็บตัวแปร -->
+                <input type="hidden" name="total" value="<?= $total_price ?>">
+                <input type="hidden" name="order_status" value="waiting">
+
+
             </div>
         </div>
     </main>

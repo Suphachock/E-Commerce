@@ -7,7 +7,6 @@ include_once "navbar.php";
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -72,8 +71,6 @@ include_once "navbar.php";
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="controller/login.js"></script>
     <script src="controller/cart.js"></script>
-
-
 </body>
 
 </html>

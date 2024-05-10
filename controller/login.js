@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       processData: false, // Prevent jQuery from processing the data
       contentType: false, // Prevent jQuery from setting a default content type
       success: function (response) {
-        if (response == 0 || response == 1) {
+        if (response ==="Login success.") {
           window.location.reload();
         } else {
           alert(response);
