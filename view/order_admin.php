@@ -3,7 +3,6 @@
 session_start();
 include_once "../condb.php";
 
-// Check if the user is logged in by verifying if a session variable (e.g., 'username') is set
 if (!isset($_SESSION['userid'])) {
     header("Location: /E-Commerce/view/login.php");
     exit();
@@ -19,6 +18,7 @@ include_once "../navbar_admin.php";
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 
 <body>
@@ -30,6 +30,7 @@ include_once "../navbar_admin.php";
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="../controller/login.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -46,6 +47,7 @@ include_once "../navbar_admin.php";
                 })
                 .catch(error => console.error("Fetch error:", error));
         }
+
         function admin_order_detail(id) {
             $.ajax({
                 url: "admin_order_detail.php",
@@ -57,6 +59,60 @@ include_once "../navbar_admin.php";
                 success: function(res) {
                     $(".order-detail").html(res);
                     $("#order_detail").modal("show");
+                }
+            })
+        }
+
+        function admin_order_confirm(id) {
+            $.ajax({
+                type: "POST",
+                url: "/E-Commerce/model/update_order.php",
+                data: {
+                    id: id
+                },
+                success: function(res) {
+                    if (res === "Update success") {
+                        $("#order_detail").modal("hide");
+                        display_order()
+                        Toastify({
+                            text: "อัพเดทคำสั่งซื้อแล้ว",
+                            duration: 1200,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "linear-gradient(to right, #00b09b, #96c93d)",
+                            },
+                        }).showToast();
+                    } else {
+                        alert(res)
+                    }
+                }
+            })
+        }
+
+        function admin_order_cancel(id) {
+            $.ajax({
+                type: "POST",
+                url: "/E-Commerce/model/cancel_order.php",
+                data: {
+                    id: id
+                },
+                success: function(res) {
+                    if (res === "Update success") {
+                        $("#order_detail").modal("hide");
+                        display_order()
+                        Toastify({
+                            text: "ยกเลิกคำสั่งซื้อแล้ว",
+                            duration: 1200,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "linear-gradient(to right, #f44336, #f48236)",
+                            },
+                        }).showToast();
+                    } else {
+                        alert(res)
+                    }
                 }
             })
         }
