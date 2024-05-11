@@ -31,4 +31,3 @@ if ($stmt) {
 
 // Close the database connection
 $conn->close();
-?>
